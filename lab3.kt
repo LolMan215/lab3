@@ -133,6 +133,25 @@ fun main() {
     val dispertion = arrayOf(d1, d2, d3, d4)
 
     val m = 3
+    addM(dispertion,y1av1, y2av2, y3av3, y4av4, m, b0, b1, b2, b3, x1min, x1max, x2min, x2max, x3min, x3max, d1, d2, d3, d4)
+}
+
+private fun Int.square(): Int = this * this
+
+private fun getDispersion(y1: Array<Int>, y2: Array<Int>, y3: Array<Int>, y1av1: Double, y2av2: Double, y3av3: Double, num: Int) =
+    ((y1[num] - y1av1).pow(2) + (y2[num] - y2av2).pow(2) + (y3[num] - y3av3).pow(2)) / 3
+
+private fun isHomogeus(gt: Double, gp: Double) = gp < gt
+
+private fun isAdequate(fp: Double, ft: Double) = fp < ft
+
+private fun addM(dispertion:Array<Double>, y1av1: Double, y2av2: Double, y3av3: Double, y4av4: Double, m: Int, b0: Double, b1:Double,b2:Double,b3:Double,
+                    x1min:Int, x1max:Int, x2min:Int, x2max:Int, x3min:Int, x3max: Int, d1: Double, d2:Double,d3:Double, d4:Double){
+    var b0 = b0
+    var b1 = b1
+    var b2 = b2
+    var b3 = b3
+    var m = m
     val gp = dispertion.max()!! / dispertion.sum()
     val f1 = m - 1
     val f2 = 4
@@ -142,12 +161,11 @@ fun main() {
         print("Дисперсія однорідна")
     else
         print("Дисперсія  неоднорідна")
-    ///////
-    //////
+
 
     val sigmaB = dispertion.sum() / n
     val sigmaSbs = sigmaB / n * m
-    val sigmaBs = sigmaSbs.pow(0.5)
+    val sigmaBs = sqrt(sigmaSbs)
 
     val beta0 = (y1av1 * 1 + y2av2 * 1 + y3av3 * 1 + y4av4 * 1) / 4
     val beta1 = (y1av1 * (-1) + y2av2 * (-1) + y3av3 * 1 + y4av4 * 1) / 4
@@ -184,8 +202,7 @@ fun main() {
     val yy2 = b0 + b1 * x1min + b2 * x2max + b3 * x3max
     val yy3 = b0 + b1 * x1max + b2 * x2min + b3 * x3max
     val yy4 = b0 + b1 * x1max + b2 * x2max + b3 * x3min
-    ///////
-    //////
+
 
     println("Критерій Фішера")
     val d = 1
@@ -199,17 +216,13 @@ fun main() {
     println("Fp = $fp")
     println("Ft берем із таблиці, Ft = 4.1")
     val ft = 4.1
-    if (isAdequate(fp, ft))
-        print("Fp = $fp < Ft, Рівняння адекватно оригіналу")
-    else
+    if (fp>ft){
         print("Fp = $fp > Ft, Рівняння неадекватно оригіналу")
+        m++
+        addM(dispertion, y1av1, y2av2, y3av3, y4av4, m, b0, b1, b2, b3, x1min, x1max, x2min, x2max, x3min, x3max, d1, d2, d3, d4)
+        }
+
+    else{
+        print("Fp = $fp < Ft, Рівняння адекватно оригіналу")}
+
 }
-
-private fun Int.square(): Int = this * this
-
-private fun getDispersion(y1: Array<Int>, y2: Array<Int>, y3: Array<Int>, y1av1: Double, y2av2: Double, y3av3: Double, num: Int) =
-    ((y1[num] - y1av1).pow(2) + (y2[num] - y2av2).pow(2) + (y3[num] - y3av3).pow(2)) / 3
-
-private fun isHomogeus(gt: Double, gp: Double) = gp < gt
-
-private fun isAdequate(fp: Double, ft: Double) = fp < ft
